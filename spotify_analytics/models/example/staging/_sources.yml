@@ -1,0 +1,131 @@
+version: 2
+
+sources:
+  - name: spotify_exercise
+    description: "sample song metadata from spotify"
+    database: rosie-data-project-testing
+    schema: raw_data
+    
+
+    tables:
+      # --------------------------------------------------------
+      # RAW DATA TABLE
+      # --------------------------------------------------------
+      - name: raw_data
+        description: "sample metadata of songs from spotify"
+        identifier: track_id
+        
+        columns:
+
+        
+          - name: track_id
+            description: "unique identifier for track"
+            tests:
+                - not_null
+                - unique
+
+          
+          - name: int64_field_0
+            description: "not sure what this does"
+            tests:
+
+
+          - name: artists
+            description: "Foreign key to customers table"
+            tests:
+              - not_null
+
+          - name: album_name
+            description: "name of album"
+            tests:
+             - not_null
+
+          - name: track_name
+            description: "name of track"
+            tests:
+                - not_null
+
+          - name: popularity
+            description: "rating of track"
+            tests:
+                - not_null
+
+          - name: duration_ms
+            description: "length in milliseconds"
+            tests:
+                - not_null
+
+          - name: explicit
+            description: "flag if the track contains explicit language"
+            tests:
+                - not_null
+
+
+          - name: danceability
+            description: "rating of dance level"
+            tests:
+                - not_null
+
+          - name: energy
+            description: "rating of energy"
+            tests:
+                - not_null
+
+          - name: key
+            description: "not sure what this does"
+            tests: 
+                - not_null
+
+          - name: loudness
+            description: "how loud is the track"
+            tests:
+                - not_null
+
+          - name: mode
+            description: "what mode is it"
+            tests:
+                - not_null
+
+          - name: speechiness
+            description: "how much speech is there"
+            tests:
+                - not_null
+
+          - name: acousticness
+            description: "how acousitc is the track"
+            tests:
+                - not_null
+
+          - name: instrumentalness
+            description: "how instrumental is the track"
+            tests:
+                - not_null
+
+          - name: liveness
+            description: "how live is the track"
+            tests:
+                - not_null
+  
+          - name: valence
+            description: "what's the valence"
+            tests:
+                - not_null
+
+          - name: tempo
+            description: "what's the tempo"
+            tests:
+              - not_null
+              
+
+
+          - name: time_signature
+            description: "what's the time signature "
+            tests:
+              - not_null
+              - accepted_values:
+                  values: [1, 2, 3, 4, 5, 6]
+          
+          - name: track_genre
+            description: "what's the genre"
+            tests:
+              - not_null

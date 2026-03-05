@@ -1,0 +1,11 @@
+spotify_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: rosie-data-project-testing
+      dataset: spotify_exercise
+      keyfile: /Users/rosietaylor/documents/CBF_files/rosie-data-project-testing-24043d579d00.json
+      location: US
+      threads: 4
