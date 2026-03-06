@@ -1,6 +1,6 @@
 {{
   config(
-    materialized='view',
+    materialized='table',
     tags=['staging', 'clean_data']
   )
 }}
@@ -66,3 +66,5 @@ SELECT
 
 
 from source
+
+WHERE album_name IS NOT NULL

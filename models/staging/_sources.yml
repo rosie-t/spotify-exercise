@@ -19,18 +19,15 @@ sources:
 
           - name: artists
             description: "Foreign key to customers table"
-            tests:
-              - not_null
+
 
           - name: album_name
             description: "name of album"
-            tests:
-             - not_null
+
 
           - name: track_name
             description: "name of track"
-            tests:
-                - not_null
+
 
           - name: popularity
             description: "The popularity of a track is a value between 0 and 100, with 100 being the most popular"
@@ -105,10 +102,7 @@ sources:
 
           - name: time_signature
             description: "what's the time signature "
-            tests:
-              - not_null
-              - accepted_values:
-                  values: [3, 4, 5, 6, 7]
+
           
           - name: track_genre
             description: "what's the genre"

@@ -17,6 +17,7 @@ ranked AS(
     row_number() over (partition by track_id order by popularity desc) as row_number
 
     FROM SOURCE
+    WHERE album_name IS NOT NULL
 
 )
 
