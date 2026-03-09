@@ -14,14 +14,17 @@ with source as (
 ranked AS(
     SELECT
     *,
-    row_number() over (partition by track_id order by popularity desc) as row_number
+    row_number() over (partition by track_id order by popularity desc, track_genre, track_name) as row_number
 
     FROM SOURCE
     WHERE album_name IS NOT NULL
 
 )
 
+
+
 SELECT 
+
 
 # primary key #
     track_id,
