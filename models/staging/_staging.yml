@@ -117,3 +117,17 @@ models:
             tests:
                 - not_null
                 - unique
+
+      - name: int_track_genre_mapping
+        description: "mapping genres to larger genre groups"
+
+        columns:
+          - name: track_id
+            description: "should be a unique identifier per track"
+            tests:
+                - unique
+                - not_null
+          - name: genre_group
+            description: "macro group of genres"
+            tests:
+                - not_null
