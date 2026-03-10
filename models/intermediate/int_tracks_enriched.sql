@@ -16,7 +16,7 @@ percentiles as(
 
 SELECT 
 track_id,
-ntile(10) over (order by popularity desc) as popularity_decile,
+    ntile(10) over (order by popularity desc) as popularity_decile,
     ntile(10) over (order by danceability desc) as danceability_decile,
     ntile(10) over (order by energy desc) as energy_decile,
     ntile(10) over (order by speechiness desc) as speechiness_decile,
@@ -167,25 +167,52 @@ SELECT
     time_signature,
 
     # track ratings #
-    popularity,
-    popularity_bucket,
-    is_top_10_percent, 
-    danceability,
-    danceability_bucket,
-    energy,
-    energy_bucket,
-    speechiness,
-    speechiness_bucket,
-    acousticness,
-    acousticness_bucket,  
-    instrumentalness,
-    instrumentalness_bucket,
-    liveness,
-    liveness_bucket,
-    valence,
-    valence_bucket,
-    avg_popularity,
-    std_liveness
+      s.popularity,
+    b.popularity_bucket,
+    b.is_top_10_percent,
+    p.popularity_decile,
+
+    s.danceability,
+    b.danceability_bucket,
+    p.danceability_decile,
+
+    s.energy,
+    b.energy_bucket,
+    p.energy_decile,
+
+    s.speechiness,
+    b.speechiness_bucket,
+    p.speechiness_decile,
+
+    s.acousticness,
+    b.acousticness_bucket,
+    p.acousticness_decile,
+
+    s.instrumentalness,
+    b.instrumentalness_bucket,
+    p.instrumentalness_decile,
+
+    s.liveness,
+    b.liveness_bucket,
+    p.liveness_decile,
+
+    s.valence,
+    b.valence_bucket,
+    p.valence_decile,
+
+
+
+
+    ## z scores - how far away from the mean is something ##
+
+    SAFE_DIVIDE(s.popularity - fs.avg_popularity, NULLIF(fs.std_popularity, 0)) AS popularity_z,
+    SAFE_DIVIDE(s.danceability - fs.avg_danceability, NULLIF(fs.std_danceability, 0)) AS danceability_z,
+    SAFE_DIVIDE(s.energy - fs.avg_energy, NULLIF(fs.std_energy, 0)) AS energy_z,
+    SAFE_DIVIDE(s.speechiness - fs.avg_speechiness, NULLIF(fs.std_speechiness, 0)) AS speechiness_z,
+    SAFE_DIVIDE(s.acousticness - fs.avg_acousticness, NULLIF(fs.std_acousticness, 0)) AS acousticness_z,
+    SAFE_DIVIDE(s.instrumentalness - fs.avg_instrumentalness, NULLIF(fs.std_instrumentalness, 0)) AS instrumentalness_z,
+    SAFE_DIVIDE(s.liveness - fs.avg_liveness, NULLIF(fs.std_liveness, 0)) AS liveness_z,
+    SAFE_DIVIDE(s.valence - fs.avg_valence, NULLIF(fs.std_valence, 0)) AS valence_z
 
 
 FROM source_data as s
@@ -196,5 +223,8 @@ on s.track_id = mapping.track_id
 LEFT JOIN buckets AS b
 on s.track_id = b.track_id
 
-CROSS JOIN feature_stats
+LEFT JOIN percentiles AS p
+ON s.track_id = p.track_id
+
+CROSS JOIN feature_stats as fs
 
