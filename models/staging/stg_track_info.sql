@@ -26,13 +26,14 @@ SELECT
     ROUND(SAFE_DIVIDE(CAST(duration_ms AS INT64), 60000), 3) AS duration_minutes,
     loudness,
 
-    mode AS mode_numerical,
+    CAST(mode AS INT64) AS mode_numerical,
     # major or minor in words #
     CASE 
     WHEN mode = 1 THEN 'major'
-    ELSE 'minor' END AS mode_name,
+    WHEN minor = 0 THEN 'minor'
+    ELSE 'No mode detected' END AS mode_name,
 
-    key AS key_numerical,
+    CAST(key AS INT64) AS key_numerical,
     # key as words #
     CASE
     WHEN key = -1 THEN 'No key detected'

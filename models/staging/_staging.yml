@@ -2,6 +2,8 @@ version: 2
 
 
 models:
+
+    ## testing the main table ##
       - name: stg_track_info
         description: "track info cleaned and null values removed"
 
@@ -30,6 +32,10 @@ models:
             description: "The popularity of a track is a value between 0 and 100, with 100 being the most popular"
             tests:
                 - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 100
 
           - name: duration_ms
             description: "length in milliseconds"
@@ -53,9 +59,19 @@ models:
                 - not_null
 
           - name: key_numerical
-            description: "he key the track is in. Integers map to pitches using standard Pitch Class notation. E.g. 0 = C, 1 = C♯/D♭, 2 = D, and so on. If no key was detected, the value is -1"
+            description: "the key the track is in. Integers map to pitches using standard Pitch Class notation. E.g. 0 = C, 1 = C♯/D♭, 2 = D, and so on. If no key was detected, the value is -1"
             tests: 
                 - not_null
+                - accepted_values:
+                    values: [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                    quote: false
+          
+          - name: key_name
+            description: "the key is track is in in words"
+            tests: 
+                - not_null
+                - accepted_values:
+                    values: ['A', 'A#/Bb', 'B', 'C', 'C#/Db', 'D','D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab']
 
           - name: loudness
             description: "how loud is the track in decibels (dB)"
@@ -66,31 +82,54 @@ models:
             description: "Major or minor key. Major is represented by 1 and minor is 0"
             tests:
                 - not_null
+                - accepted_values:
+                    values: [0,1]
+                    quote: false
 
           - name: speechiness
             description: "detects the presence of spoken words in a track. . Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks"
             tests:
                 - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 1
 
           - name: acousticness
             description: "A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic"
             tests:
                 - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 1
 
           - name: instrumentalness
             description: "Predicts whether a track contains no vocals. Rap or spoken word tracks are clearly vocal. The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content"
             tests:
                 - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 1
 
           - name: liveness
             description: "Detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the track was performed live. A value above 0.8 provides strong likelihood that the track is live"
             tests:
                 - not_null
-  
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 1
+
           - name: valence
             description: "0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry"
             tests:
                 - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 1
 
           - name: tempo
             description: "The overall estimated tempo of a track in beats per minute (BPM)."
@@ -101,13 +140,20 @@ models:
             description: "what's the time signature "
             tests:
               - not_null
+              - accepted_values:
+                  values: [0, 1, 2, 3, 4, 5]
+                  quote: false
 
           
           - name: genre
             description: "what's the genre"
             tests:
               - not_null
-        
+
+
+        ## testing the deduped table - track_id here will be unique ##
+
+
       - name: stg_tracks_deduped
         description: "one row per track"
 
@@ -118,16 +164,163 @@ models:
                 - not_null
                 - unique
 
-      - name: int_track_genre_mapping
+          - name: artists_name
+            description: "Foreign key to customers table"
+            tests:
+              - not_null
+
+          - name: album_name
+            description: "name of album"
+            tests:
+             - not_null
+
+          - name: track_name
+            description: "name of track"
+            tests:
+                - not_null
+
+          - name: popularity
+            description: "The popularity of a track is a value between 0 and 100, with 100 being the most popular"
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 100
+
+          - name: duration_ms
+            description: "length in milliseconds"
+            tests:
+                - not_null
+
+          - name: is_explicit
+            description: "flag if the track contains explicit language"
+            tests:
+                - not_null
+
+
+          - name: danceability
+            description: "how suitable a track is for dancing"
+            tests:
+                - not_null
+
+          - name: energy
+            description: "represents a perceptual measure of intensity and activity. "
+            tests:
+                - not_null
+
+          - name: key_numerical
+            description: "the key the track is in. Integers map to pitches using standard Pitch Class notation. E.g. 0 = C, 1 = C♯/D♭, 2 = D, and so on. If no key was detected, the value is -1"
+            tests: 
+                - not_null
+                - accepted_values:
+                    values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                    quote: false
+
+          - name: key_name
+            description: "the key is track is in in words"
+            tests: 
+                - not_null
+                - accepted_values:
+                    values: ['A', 'A#/Bb', 'B', 'C', 'C#/Db', 'D','D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab']
+
+          - name: loudness
+            description: "how loud is the track in decibels (dB)"
+            tests:
+                - not_null
+
+          - name: mode_numerical
+            description: "Major or minor key. Major is represented by 1 and minor is 0"
+            tests:
+                - not_null
+                - accepted_values:
+                    values: [0, 1]
+                    quote: false
+  
+          - name: mode_name
+            description: "Major or minor key in words"
+            tests:
+                - not_null
+                - accepted_values:
+                    values: ['major', 'minor']
+
+          - name: speechiness
+            description: "detects the presence of spoken words in a track. . Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks"
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 1
+
+          - name: acousticness
+            description: "A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic"
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 1
+
+          - name: instrumentalness
+            description: "Predicts whether a track contains no vocals. Rap or spoken word tracks are clearly vocal. The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content"
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 1
+
+          - name: liveness
+            description: "Detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the track was performed live. A value above 0.8 provides strong likelihood that the track is live"
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 1
+
+          - name: valence
+            description: "0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry"
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 1
+
+          - name: tempo
+            description: "The overall estimated tempo of a track in beats per minute (BPM)."
+            tests:
+              - not_null
+
+          - name: time_signature
+            description: "what's the time signature "
+            tests:
+              - not_null
+              - accepted_values:
+                  values: [0, 1, 2, 3, 4, 5]
+                  quote: false
+
+          
+          - name: genre
+            description: "what's the genre"
+            tests:
+              - not_null
+
+      ## testing the genre mapping##
+
+      - name: stg_track_genre_mapping
         description: "mapping genres to larger genre groups"
 
         columns:
           - name: track_id
-            description: "should be a unique identifier per track"
+            description: "identifier per track"
             tests:
-                - unique
                 - not_null
-          - name: genre_group
+                - unique
+                
+          - name: macro_genre
             description: "macro group of genres"
             tests:
                 - not_null
