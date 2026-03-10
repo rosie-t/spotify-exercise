@@ -1,3 +1,136 @@
 version: 2
 
+models:
+      - name: int_tracks_enriched
+        description: "transformations for data points including categorising, avg, stddev and z score"
 
+        columns:
+          - name: track_id
+            description: "spotify identifier for track"
+            tests: 
+                - unique
+                - not_null
+
+
+## accepted range test for deciles ##
+          - name: popularity_decile
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 1
+                      max_value: 10
+          - name: danceability_decile
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 1
+                      max_value: 10
+          - name: energy_decile
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 1
+                      max_value: 10
+
+          - name: speechiness_decile
+            tests:
+                - not_null
+                -  dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 1
+                      max_value: 10
+          - name: acousticness_decile
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 1
+                      max_value: 10
+          - name: instrumentalness_decile
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 1
+                      max_value: 10
+          - name: liveness_decile
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 1
+                      max_value: 10
+          - name: valence_decile
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 1
+                      max_value: 10
+
+## accepted values tests for the buckets ##
+          - name: popularity_bucket
+            tests:
+                - not_null
+                - accepted_values:
+                      values: ['Top 20%', 'Middle 50%', 'Bottom 30%']
+          - name: is_top_10_percent
+            tests:
+                - not_null
+                - accepted_values:
+                      values: [0,1]
+                      quote: false
+
+          - name: danceability_bucket
+            tests:
+                - not_null
+                - accepted_values:
+                     values: ['Very High', 'High', 'Medium', 'Low', 'Very Low']
+          - name: energy_bucket
+            tests:
+                - not_null
+                - accepted_values:
+                     values: ['Very High', 'High', 'Medium', 'Low', 'Very Low']
+          - name: speechiness_bucket
+            tests:
+                - not_null
+                - accepted_values:
+                     values: ['High Speech', 'Mixed', 'Low Speech']
+          - name: acousticness_bucket
+            tests:
+                - not_null
+                - accepted_values:
+                     values: ['High Acoustic', 'Moderate', 'Low Acoustic']
+            
+          - name: instrumentalness_bucket
+            tests:  
+                - not_null
+                - accepted_values:
+                      values: ['High Instrumental', 'Mixed', 'Vocal']
+                  
+          - name: liveness_bucket
+            tests:
+                - not_null
+                - accepted_values:
+                      values: ['High Liveness', 'Mixed', 'Low Liveness']
+          - name: valence_bucket
+            tests:
+                - not_null
+                - accepted_values:
+                      values: ['Very Positive', 'Positive', 'Neutral', 'Negative', 'Very Negative']
+          - name: tempo_bucket
+            tests:
+                - not_null
+                - accepted_values:
+                      values: ['Slow', 'Medium', 'Fast', 'Very Fast']
+          - name: duration_bucket
+            tests:
+                - not_null
+                - accepted_values:
+                      values: ['Short', 'Standard', 'Long', 'Very Long']
+
+
+## TODO: unit tests on calculations 
