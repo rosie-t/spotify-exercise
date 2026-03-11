@@ -38,7 +38,7 @@ models:
           - name: speechiness_decile
             tests:
                 - not_null
-                -  dbt_utils.accepted_range:
+                - dbt_utils.accepted_range:
                     arguments:
                       min_value: 1
                       max_value: 10
@@ -133,4 +133,22 @@ models:
                       values: ['Short', 'Standard', 'Long', 'Very Long']
 
 
-## TODO: unit tests on calculations 
+      - name: int_tracks_artists
+        description: "explodes the arists field with a different grain of one row per artist"
+
+        columns:
+          - name: track_id
+            description: "spotify identifier for track"
+            tests: 
+                - not_null
+              
+          - name: artist_name
+            description: "individual artists"
+            tests: 
+                - not_null
+
+          - name: artist_position
+            description: "what position is each artist in the array"
+            tests: 
+                - not_null
+    
