@@ -1,0 +1,69 @@
+version: 2
+
+unit_tests:
+  - name: unit_int_tracks_scored__popularity_deciles
+    model: int_tracks_scored
+    given:
+      - input: ref('stg_tracks_deduped')
+        rows:
+          # include all fields referenced in int_tracks_scored (the audio features)
+          - {track_id: 't1', popularity: 100, danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1}
+          - {track_id: 't2', popularity: 90,  danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1}
+          - {track_id: 't3', popularity: 80,  danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1}
+          - {track_id: 't4', popularity: 70,  danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1}
+          - {track_id: 't5', popularity: 60,  danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1}
+          - {track_id: 't6', popularity: 50,  danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1}
+          - {track_id: 't7', popularity: 40,  danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1}
+          - {track_id: 't8', popularity: 30,  danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1}
+          - {track_id: 't9', popularity: 20,  danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1}
+          - {track_id: 't10',popularity: 10,  danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1}
+    expect:
+      rows:
+        - {track_id: 't1', popularity_decile: 1}
+        - {track_id: 't2', popularity_decile: 2}
+        - {track_id: 't3', popularity_decile: 3}
+        - {track_id: 't4', popularity_decile: 4}
+        - {track_id: 't5', popularity_decile: 5}
+        - {track_id: 't6', popularity_decile: 6}
+        - {track_id: 't7', popularity_decile: 7}
+        - {track_id: 't8', popularity_decile: 8}
+        - {track_id: 't9', popularity_decile: 9}
+        - {track_id: 't10', popularity_decile: 10}
+
+  - name: unit_int_tracks_scored__popularity_z_two_rows
+    model: int_tracks_scored
+    given:
+      - input: ref('stg_tracks_deduped')
+        rows:
+          - {track_id: 'a', popularity: 0, danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1}
+          - {track_id: 'b', popularity: 2, danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1}
+    expect:
+      rows:
+        - {track_id: 'a', popularity_z: -1.0}
+        - {track_id: 'b', popularity_z: 1.0}
+
+
+  - name: unit_int_tracks_buckets__popularity_bucket_and_flag
+    model: int_tracks_buckets
+
+    given:
+      - input: ref('stg_tracks_deduped')
+        rows:
+          - {track_id: 't1', popularity: 100, danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1, duration_seconds: 100, tempo: 80}
+          - {track_id: 't2', popularity: 90,  danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1, duration_seconds: 250, tempo: 130}
+          - {track_id: 't3', popularity: 80,  danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1, duration_seconds: 400, tempo: 160}
+          - {track_id: 't10', popularity: 10, danceability: 0.1, energy: 0.1, speechiness: 0.1, acousticness: 0.1, instrumentalness: 0.1, liveness: 0.1, valence: 0.1, duration_seconds: 100, tempo: 80}
+
+      - input: ref('int_tracks_scored')
+        rows:
+          - {track_id: 't1',  popularity_decile: 1,  danceability_decile: 5, energy_decile: 5, speechiness_decile: 5, acousticness_decile: 5, instrumentalness_decile: 5, liveness_decile: 5, valence_decile: 5}
+          - {track_id: 't2',  popularity_decile: 2,  danceability_decile: 5, energy_decile: 5, speechiness_decile: 5, acousticness_decile: 5, instrumentalness_decile: 5, liveness_decile: 5, valence_decile: 5}
+          - {track_id: 't3',  popularity_decile: 3,  danceability_decile: 5, energy_decile: 5, speechiness_decile: 5, acousticness_decile: 5, instrumentalness_decile: 5, liveness_decile: 5, valence_decile: 5}
+          - {track_id: 't10', popularity_decile: 10, danceability_decile: 5, energy_decile: 5, speechiness_decile: 5, acousticness_decile: 5, instrumentalness_decile: 5, liveness_decile: 5, valence_decile: 5}
+
+    expect:
+      rows:
+        - {track_id: 't1',  popularity_bucket: 'Top 20%',    is_top_10_percent: 1, duration_bucket: 'Short',     tempo_bucket: 'Slow'}
+        - {track_id: 't2',  popularity_bucket: 'Top 20%',    is_top_10_percent: 0, duration_bucket: 'Long',      tempo_bucket: 'Fast'}
+        - {track_id: 't3',  popularity_bucket: 'Middle 50%', is_top_10_percent: 0, duration_bucket: 'Very Long', tempo_bucket: 'Very Fast'}
+        - {track_id: 't10', popularity_bucket: 'Bottom 30%', is_top_10_percent: 0, duration_bucket: 'Short',     tempo_bucket: 'Slow'}
