@@ -318,6 +318,7 @@ models:
             description: "identifier per track"
             tests:
                 - not_null
+                - unique
           - name: macro_genre
             description: "macro group of genres"
             tests:
