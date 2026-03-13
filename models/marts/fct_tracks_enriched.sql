@@ -1,5 +1,5 @@
 {{
-  config(materialized='view', tags=['intermediate'])
+  config(materialized='table', tags=['mart'])
 }}
 
 with source_data as (
