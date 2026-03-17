@@ -1,0 +1,176 @@
+models:
+
+    ## testing the macro_genre tables ##
+      - name: fct_macro_genre
+        description: "one row per macro genre. examines popularity and uniqueness of songs based on genre."
+       
+        columns:
+          - name: macro_genre
+            description: "test column"
+            tests:
+                - not_null
+          - name: top_10_share
+            description: "proportion that the genre takes up the top 10. between 0 and 1"
+            tests:
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 1
+          - name: avg_popularity_z
+            description: "test column"
+            tests:
+                - not_null
+
+          - name: avg_danceability_z
+            description: "test column"
+            tests:
+                - not_null
+
+          - name: avg_energy_z
+            description: "test column"
+            tests:
+                - not_null
+
+          - name: avg_speechiness_z
+            description: "test column"
+            tests:
+                - not_null
+
+          - name: avg_acousticness_z
+            description: "test column"
+            tests: 
+                - not_null
+          - name: avg_instrumentalness_z
+            description: "testing"
+            tests: 
+                - not_null
+                
+          - name: avg_liveness_z
+            description: "test column"
+            tests:
+                - not_null
+          - name: avg_valence_z
+            description: "test column"
+            tests:
+                - not_null
+          - name: explicit_rate
+            description: "test column"
+            tests:
+                - not_null
+    
+
+# testing the tracks_enriched table # 
+
+      - name: fct_tracks_enriched
+        description: "one row per track. Select query from int dim tables"
+
+        columns:
+          - name: track_id
+            description: "primary key"
+            tests:
+                - not_null
+                - unique
+          - name: track_name
+            description: "test column"
+            tests:
+                - not_null
+          - name: artists_name
+            description: "array"
+            tests:
+                - not_null
+          - name: album_name
+            description: "test column"
+            tests: 
+                - not_null
+          - name: is_explicit
+            description: "boolean"
+            tests:
+                - not_null
+          - name: genre
+            description: "test column"
+            tests:
+                - not_null
+          - name: macro_genre
+            description: "test column"
+            tests:
+                - not_null
+          - name: duration_ms
+            description: "test column"
+            tests:
+                - not_null
+          - name: duration_seconds
+            description: "test column"
+            tests:
+                - not_null
+          - name: duration_minutes
+            description: "test column"
+            tests:
+                - not_null
+          - name: duration_bucket
+            description: "test column"
+            tests:
+                - not_null
+                - accepted_values:
+                      values: ['Short', 'Standard', 'Long', 'Very Long']
+                
+          - name: mode_numerical
+            description: "test column"
+            tests:
+                - not_null
+          - name: mode_name
+            description: "test column"
+            tests:
+                - not_null
+          - name: key_numerical
+            description: "test column"
+            tests:
+                - not_null
+          - name: key_name
+            description: "test column"
+            tests:
+                - not_null
+          - name: tempo
+            description: "test column"
+            tests:
+                - not_null
+          - name: tempo_bucket
+            description: "test column"
+            tests:
+                - not_null
+          - name: time_signature
+            description: "test column"
+            tests:
+                - not_null
+          - name: popularity
+            description: "test column"
+            tests:
+                - not_null
+          - name: danceability
+            description: "test column"
+            tests:
+                - not_null
+          - name: energy
+            description: "test column"
+            tests:
+                - not_null
+          - name: speechiness
+            description: "test column"
+            tests:
+                - not_null
+          - name: acousticness
+            description: "test column"
+            tests:
+                - not_null
+          - name: instrumentalness
+            description: "test column"
+            tests:
+                - not_null
+          - name: liveness
+            description: "test column"
+            tests:
+                - not_null
+          - name: valence
+            description: "test column"
+            tests:
+                - not_null
