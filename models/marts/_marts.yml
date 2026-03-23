@@ -9,6 +9,9 @@ models:
             description: "test column"
             tests:
                 - not_null
+                - accepted_values:
+                    values: ['Classical & Instrumental', 'Comedy / Novelty', 'Electronic / Dance', 'Hip-Hop / R&B / Soul', 'Jazz / Blues / Country / Folk', 'Latin & Brazilian','Metal', 'Mood / Functional', 'Other', 'Pop / Dance', 'Reggae / Ska / Bass', 'Rock', 'World / Regional']                    
+
           - name: top_10_share
             description: "proportion that the genre takes up the top 10. between 0 and 1"
             tests:
@@ -95,6 +98,9 @@ models:
             description: "wider genre, from intermediates"
             tests:
                 - not_null
+                - accepted_values:
+                    values: ['Classical & Instrumental', 'Comedy / Novelty', 'Electronic / Dance', 'Hip-Hop / R&B / Soul', 'Jazz / Blues / Country / Folk', 'Latin & Brazilian','Metal', 'Mood / Functional', 'Other', 'Pop / Dance', 'Reggae / Ska / Bass', 'Rock', 'World / Regional']                    
+
           - name: duration_ms
             description: "milliseconds"
             tests:
@@ -357,3 +363,43 @@ models:
                     arguments:
                       min_value: 0
                       max_value: 10  
+
+    ## testing the dim_artist table ##
+      - name: dim_artists
+        description: "one row per artist."
+       
+        columns:
+          - name: artist_name
+            description: "name of the artist - not unique, one row per artist, track_id"
+            tests:
+                - not_null
+    
+          - name: track_id
+            description: "id of the track, not unique"
+            tests:
+                - not_null
+                    
+          - name: album_name
+            description: "name of the album, not unique"
+            tests:
+                - not_null
+                    
+          - name: track_name
+            description: "name of the track, not unique"
+            tests:
+                - not_null
+                    
+          - name: macro_genre
+            description: "name of the wider genre"
+            tests:
+                - not_null
+                - accepted_values:
+                    values: ['Classical & Instrumental', 'Comedy / Novelty', 'Electronic / Dance', 'Hip-Hop / R&B / Soul', 'Jazz / Blues / Country / Folk', 'Latin & Brazilian','Metal', 'Mood / Functional', 'Other', 'Pop / Dance', 'Reggae / Ska / Bass', 'Rock', 'World / Regional']                    
+
+          - name: popularity
+            description: "what is the popularity"
+            tests:
+                - not_null
+
+
+

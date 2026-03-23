@@ -1,3 +1,5 @@
+## One row per track_id, artist - artists could appear more than once if they're on multiple tracks ## 
+
 {{
   config(
     materialized='table',
