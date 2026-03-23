@@ -72,7 +72,7 @@ models:
                 - not_null
                 - unique
           - name: track_name
-            description: "test column"
+            description: "name of the track"
             tests:
                 - not_null
           - name: artists_name
@@ -80,7 +80,7 @@ models:
             tests:
                 - not_null
           - name: album_name
-            description: "test column"
+            description: "name of the album"
             tests: 
                 - not_null
           - name: is_explicit
@@ -88,89 +88,272 @@ models:
             tests:
                 - not_null
           - name: genre
-            description: "test column"
+            description: "sub-genre"
             tests:
                 - not_null
           - name: macro_genre
-            description: "test column"
+            description: "wider genre, from intermediates"
             tests:
                 - not_null
           - name: duration_ms
-            description: "test column"
+            description: "milliseconds"
             tests:
                 - not_null
           - name: duration_seconds
-            description: "test column"
+            description: "seconds"
             tests:
                 - not_null
           - name: duration_minutes
-            description: "test column"
+            description: "minutes"
             tests:
                 - not_null
           - name: duration_bucket
-            description: "test column"
+            description: "category"
             tests:
                 - not_null
                 - accepted_values:
                       values: ['Short', 'Standard', 'Long', 'Very Long']
                 
           - name: mode_numerical
-            description: "test column"
+            description: "major or minor"
             tests:
                 - not_null
           - name: mode_name
-            description: "test column"
+            description: "major or minor"
             tests:
                 - not_null
+                - accepted_values:
+                      values: ['major', 'minor']
           - name: key_numerical
-            description: "test column"
+            description: "what key by number"
             tests:
                 - not_null
+                - accepted_values:
+                    values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                    quote: false
+
           - name: key_name
-            description: "test column"
-            tests:
+            description: "the key is track is in in words"
+            tests: 
                 - not_null
+                - accepted_values:
+                    values: ['A', 'A#/Bb', 'B', 'C', 'C#/Db', 'D','D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab']
           - name: tempo
-            description: "test column"
             tests:
                 - not_null
           - name: tempo_bucket
-            description: "test column"
             tests:
                 - not_null
           - name: time_signature
-            description: "test column"
             tests:
                 - not_null
           - name: popularity
-            description: "test column"
             tests:
                 - not_null
           - name: danceability
-            description: "test column"
             tests:
                 - not_null
           - name: energy
-            description: "test column"
             tests:
                 - not_null
           - name: speechiness
-            description: "test column"
             tests:
                 - not_null
           - name: acousticness
-            description: "test column"
             tests:
                 - not_null
           - name: instrumentalness
-            description: "test column"
             tests:
                 - not_null
           - name: liveness
-            description: "test column"
             tests:
                 - not_null
           - name: valence
-            description: "test column"
             tests:
                 - not_null
+  
+    ## testing the artist table ##
+      - name: fct_artists
+        description: "one row per artist."
+       
+        columns:
+          - name: artist_name
+            description: "name of the artist"
+            tests:
+                - not_null
+                - unique
+          - name: track_count
+            tests: 
+                - not_null
+
+          - name: avg_popularity
+            tests: 
+                - not_null
+                
+          - name: max_popularity
+            tests: 
+                - not_null
+                
+          - name: avg_danceability
+            tests: 
+                - not_null
+                
+          - name: max_danceability
+            tests: 
+                - not_null
+                
+          - name: avg_energy
+            tests: 
+                - not_null
+                
+          - name: max_energy
+            tests: 
+                - not_null
+                
+          - name: avg_speechiness
+            tests: 
+                - not_null
+                
+          - name: max_speechiness
+            tests: 
+                - not_null
+                
+          - name: avg_acousticness
+            tests: 
+                - not_null
+                
+          - name: max_acousticness
+            tests: 
+                - not_null
+                
+          - name: avg_instrumentalness
+            tests: 
+                - not_null
+                
+          - name: max_instrumentalness
+            tests: 
+                - not_null
+                
+          - name: avg_liveness
+            tests: 
+                - not_null
+                
+          - name: max_liveness
+            tests: 
+                - not_null
+                
+          - name: avg_valence
+            tests: 
+                - not_null
+                
+          - name: max_valence
+            tests: 
+                - not_null
+                
+          - name: top_10_track_count
+            tests: 
+                - not_null
+                
+          - name: top_10_share
+            tests: 
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 1
+
+          - name: avg_popularity_z
+            tests: 
+                - not_null
+                
+          - name: avg_danceability_z
+            tests: 
+                - not_null
+                
+          - name: avg_energy_z
+            tests: 
+                - not_null
+                
+          - name: avg_speechiness_z
+            tests: 
+                - not_null
+                
+          - name: avg_acousticness_z
+            tests: 
+                - not_null
+                
+          - name: avg_instrumentalness_z
+            tests: 
+                - not_null
+                
+          - name: avg_liveness_z
+            tests: 
+                - not_null
+                
+          - name: avg_valence_z
+            tests: 
+                - not_null
+                
+          - name: popularity_decile
+            tests: 
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 10
+
+          - name: danceability_decile
+            tests: 
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 10  
+
+          - name: energy_decile
+            tests: 
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 10  
+
+          - name: speechiness_decile
+            tests: 
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 10  
+
+          - name: acousticness_decile
+            tests: 
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 10  
+
+          - name: instrumentalness_decile
+            tests: 
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 10  
+
+          - name: liveness_decile
+            tests: 
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 10  
+
+          - name: valence_decile
+            tests: 
+                - not_null
+                - dbt_utils.accepted_range:
+                    arguments:
+                      min_value: 0
+                      max_value: 10  
